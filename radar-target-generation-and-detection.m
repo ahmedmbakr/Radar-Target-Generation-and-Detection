@@ -78,8 +78,8 @@ for i=1:length(t)
     %Now by mixing the Transmit and Receive generate the beat signal
     %This is done by element wise matrix multiplication of Transmit and
     %Receiver Signal
-    Mix(i) = cos(2 * pi * (2 * slope * r_t(i) / speedOfLight * t(i) + 2 * fc * v / speedOfLight * t(i)));
-    %Mix2(i) = (Tx(i)*Rx(i));
+    % Mix(i) = cos(2 * pi * (2 * slope * r_t(i) / speedOfLight * t(i) + 2 * fc * v / speedOfLight * t(i)));
+    Mix(i) = (Tx(i)*Rx(i));
     %disp(Mix(i) - Mix2(i)); % TODO The result should be zero as they are
     %presumed to be the same operation
     
@@ -91,18 +91,20 @@ end
  % *%TODO* :
 %reshape the vector into Nr*Nd array. Nr and Nd here would also define the size of
 %Range and Doppler FFT respectively.
-
+Mix=reshape(Mix,[1 Nr*Nd]);
+x = 3;
  % *%TODO* :
 %run the FFT on the beat signal along the range bins dimension (Nr) and
 %normalize.
-
+Mix_fft = fft(Mix, Nr);
  % *%TODO* :
 % Take the absolute value of FFT output
+abs_Mix_fft = abs(Mix_fft / Nr);
 
  % *%TODO* :
 % Output of FFT is double sided signal, but we are interested in only one side of the spectrum.
 % Hence we throw out half of the samples.
-
+abs_Mix_fft  = abs_Mix_fft(1:Nr/2+1) ;
 
 %plotting the range
 figure ('Name','Range from First FFT')
@@ -110,7 +112,7 @@ subplot(2,1,1)
 
  % *%TODO* :
  % plot FFT output 
-
+plot(abs_Mix_fft);
  
 axis ([0 200 0 1]);
 
