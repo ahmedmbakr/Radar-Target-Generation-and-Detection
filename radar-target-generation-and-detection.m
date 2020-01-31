@@ -67,14 +67,21 @@ for i=1:length(t)
     % *%TODO* :
     %For each time sample we need update the transmitted and
     %received signal. 
-    Tx(i) = 
-    Rx (i)  =
+    Tx(i) = cos(2 * pi * (fc * t(i) + slope * t(i) * t(i) / 2));
+    
+    r_t(i) =  R + v*t(i);
+    td(i) = 2 *  r_t(i) / speedOfLight; % signal trip time from Lesson 3.2
+    tMinusTaw = t(i) - td(i);
+    Rx(i)  = cos(2 * pi * (fc * tMinusTaw + slope * tMinusTaw * tMinusTaw / 2));
     
     % *%TODO* :
     %Now by mixing the Transmit and Receive generate the beat signal
     %This is done by element wise matrix multiplication of Transmit and
     %Receiver Signal
-    Mix(i) = 
+    Mix(i) = cos(2 * pi * (2 * slope * r_t(i) / speedOfLight * t(i) + 2 * fc * v / speedOfLight * t(i)));
+    %Mix2(i) = (Tx(i)*Rx(i));
+    %disp(Mix(i) - Mix2(i)); % TODO The result should be zero as they are
+    %presumed to be the same operation
     
 end
 
